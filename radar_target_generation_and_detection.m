@@ -1,4 +1,4 @@
-clear all
+clear;
 clc;
 
 %% Radar Specifications 
@@ -32,9 +32,9 @@ initial_velocity = -20; %speed of the target
 % chirp using the requirements above.
 b_sweep = speed_of_light / (2 * range_resolution);
 
-t_chirp = 5.5 * 2 * range_max / speed_of_light;
+Tchirp = 5.5 * 2 * range_max / speed_of_light;
 
-slope = b_sweep / t_chirp;
+slope = b_sweep / Tchirp;
 
 
 %Operating carrier frequency of Radar 
@@ -71,18 +71,20 @@ for i=1:length(t)
     
     % *%TODO* :
     %For each time stamp update the Range of the Target for constant velocity. 
+    range = initial_position + initial_velocity*t(i);
     
     % *%TODO* :
     %For each time sample we need update the transmitted and
     %received signal. 
-    Tx(i) = 
-    Rx (i)  =
+    Tx(i) = cos(2*pi*(frequency*t(i) + slope*t(i)^2/2));
+    td(i) = 2 * r_t(i) / speed_of_light;
+    Rx (i)  = cos(2*pi*(frequency*(t(i)-td(i)) + slope*(t(i)-td(i))^2/2));
     
     % *%TODO* :
     %Now by mixing the Transmit and Receive generate the beat signal
     %This is done by element wise matrix multiplication of Transmit and
     %Receiver Signal
-    Mix(i) = 
+    Mix(i) = Tx(i) .* Rx(i);
     
 end
 
